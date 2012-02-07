@@ -1,0 +1,24 @@
+dnl configure.in
+AC_PREREQ(2.59)
+AC_INIT([nec2c], [0.9], [mjtrangoni@gmail.com])
+AM_INIT_AUTOMAKE
+AC_CONFIG_SRCDIR([main.c])
+AC_CONFIG_HEADERS(config.h)
+
+# Checks for programs.
+AC_PROG_CC
+AC_PROG_INSTALL
+AC_PROG_RANLIB
+AC_PROG_AWK
+
+# Checks for libraries.
+
+# Checks for header files.
+
+# Checks for typedefs, structures, and compiler characteristics.
+
+# Checks for library functions.
+
+AC_CONFIG_FILES([Makefile])
+AC_OUTPUT
+
