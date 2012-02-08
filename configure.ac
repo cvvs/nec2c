@@ -1,10 +1,9 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_PREREQ(2.57)
+AC_PREREQ(2.62)
 AC_INIT(nec2c, 0.9, mjtrangoni@gmail.com)
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_SRCDIR([src/main.c])
-AC_CONFIG_HEADERS([config.h])
 
 AC_CANONICAL_BUILD
 AC_CANONICAL_HOST
@@ -85,17 +84,8 @@ if test "$double_type" = none; then
        AC_MSG_ERROR([valid types are double, float and ldouble.])
 fi       
 
-dnl Check optimal compiler flags
-
-AX_GCC_ARCHFLAG(NO, [$CFLAGS], [])
-dnl get the flags
-CFLAGS="${CFLAGS=}"
-AX_OPENMP([have_openmp=yes], [have_openmp=no])
-
-
-
-
-
+dnl Check OpenMP support
+AC_OPENMP
 
 AC_OUTPUT(Makefile src/Makefile)
 

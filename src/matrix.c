@@ -24,7 +24,7 @@
 *******************************************************************/
 
 #include "nec2c.h"
-//#include <omp.h>
+#include <omp.h>
 
 /* common  /data/ */
 extern data_t data;
@@ -454,7 +454,7 @@ void cmws( int j, int i1, int i2, complex long double *cm,
   int ipr, i, ipatch, ik, js=0, ij, jx;
   long double xi, yi, zi, tx, ty, tz;
   complex long double etk, ets, etc;
-
+  i=nw;
   j--;
   dataj.s= data.si[j];
   dataj.b= data.bi[j];

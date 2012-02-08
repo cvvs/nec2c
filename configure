@@ -607,7 +607,7 @@ ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
 LIBOBJS
-PRTDIAG
+OPENMP_CFLAGS
 EGREP
 GREP
 CPP
@@ -712,7 +712,7 @@ enable_option_checking
 enable_maintainer_mode
 enable_dependency_tracking
 enable_double
-with_gcc_arch
+enable_openmp
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1349,12 +1349,7 @@ Optional Features:
   --disable-dependency-tracking  speeds up one-time build
   --enable-dependency-tracking   do not reject slow dependency extractors
   --enable-double=TYPE    type of double representation [default=double]
-
-Optional Packages:
-  --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
-  --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
-  --with-gcc-arch=<arch>  use architecture <arch> for gcc -march/-mtune,
-                          instead of guessing
+  --disable-openmp        do not use OpenMP
 
 Some influential environment variables:
   CC          C compiler command
@@ -2410,8 +2405,6 @@ ac_config_sub="$SHELL $ac_aux_dir/config.sub"  # Please don't use this var.
 ac_configure="$SHELL $ac_aux_dir/configure"  # Please don't use this var.
 
 
-
-ac_config_headers="$ac_config_headers config.h"
 
 
 # Make sure we can run config.sub.
@@ -4924,477 +4917,68 @@ if test "$double_type" = none; then
 fi
 
 
-
-
-
-
-# Check whether --with-gcc-arch was given.
-if test "${with_gcc_arch+set}" = set; then :
-  withval=$with_gcc_arch; ax_gcc_arch=$withval
-else
-  ax_gcc_arch=yes
+  OPENMP_CFLAGS=
+  # Check whether --enable-openmp was given.
+if test "${enable_openmp+set}" = set; then :
+  enableval=$enable_openmp;
 fi
 
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for gcc architecture flag" >&5
-$as_echo_n "checking for gcc architecture flag... " >&6; }
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: " >&5
-$as_echo "" >&6; }
-if ${ax_cv_gcc_archflag+:} false; then :
+  if test "$enable_openmp" != no; then
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $CC option to support OpenMP" >&5
+$as_echo_n "checking for $CC option to support OpenMP... " >&6; }
+if ${ac_cv_prog_c_openmp+:} false; then :
   $as_echo_n "(cached) " >&6
-else
-
-ax_cv_gcc_archflag="unknown"
-
-if test "$GCC" = yes; then
-
-if test "x$ax_gcc_arch" = xyes; then
-ax_gcc_arch=""
-if test "$cross_compiling" = no; then
-case $host_cpu in
-  i[3456]86*|x86_64*) # use cpuid codes
-
-ac_ext=c
-ac_cpp='$CPP $CPPFLAGS'
-ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
-ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
-ac_compiler_gnu=$ac_cv_c_compiler_gnu
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for x86 cpuid 0 output" >&5
-$as_echo_n "checking for x86 cpuid 0 output... " >&6; }
-if ${ax_cv_gcc_x86_cpuid_0+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  if test "$cross_compiling" = yes; then :
-  ax_cv_gcc_x86_cpuid_0=unknown
 else
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
-#include <stdio.h>
-int
-main ()
-{
 
-     int op = 0, eax, ebx, ecx, edx;
-     FILE *f;
-      __asm__("cpuid"
-        : "=a" (eax), "=b" (ebx), "=c" (ecx), "=d" (edx)
-        : "a" (op));
-     f = fopen("conftest_cpuid", "w"); if (!f) return 1;
-     fprintf(f, "%x:%x:%x:%x\n", eax, ebx, ecx, edx);
-     fclose(f);
-     return 0;
-
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_run "$LINENO"; then :
-  ax_cv_gcc_x86_cpuid_0=`cat conftest_cpuid`; rm -f conftest_cpuid
-else
-  ax_cv_gcc_x86_cpuid_0=unknown; rm -f conftest_cpuid
-fi
-rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
-  conftest.$ac_objext conftest.beam conftest.$ac_ext
-fi
-
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ax_cv_gcc_x86_cpuid_0" >&5
-$as_echo "$ax_cv_gcc_x86_cpuid_0" >&6; }
-ac_ext=c
-ac_cpp='$CPP $CPPFLAGS'
-ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
-ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
-ac_compiler_gnu=$ac_cv_c_compiler_gnu
-
-
-
-ac_ext=c
-ac_cpp='$CPP $CPPFLAGS'
-ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
-ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
-ac_compiler_gnu=$ac_cv_c_compiler_gnu
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for x86 cpuid 1 output" >&5
-$as_echo_n "checking for x86 cpuid 1 output... " >&6; }
-if ${ax_cv_gcc_x86_cpuid_1+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  if test "$cross_compiling" = yes; then :
-  ax_cv_gcc_x86_cpuid_1=unknown
-else
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-#include <stdio.h>
-int
-main ()
-{
-
-     int op = 1, eax, ebx, ecx, edx;
-     FILE *f;
-      __asm__("cpuid"
-        : "=a" (eax), "=b" (ebx), "=c" (ecx), "=d" (edx)
-        : "a" (op));
-     f = fopen("conftest_cpuid", "w"); if (!f) return 1;
-     fprintf(f, "%x:%x:%x:%x\n", eax, ebx, ecx, edx);
-     fclose(f);
-     return 0;
-
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_run "$LINENO"; then :
-  ax_cv_gcc_x86_cpuid_1=`cat conftest_cpuid`; rm -f conftest_cpuid
-else
-  ax_cv_gcc_x86_cpuid_1=unknown; rm -f conftest_cpuid
-fi
-rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
-  conftest.$ac_objext conftest.beam conftest.$ac_ext
-fi
-
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ax_cv_gcc_x86_cpuid_1" >&5
-$as_echo "$ax_cv_gcc_x86_cpuid_1" >&6; }
-ac_ext=c
-ac_cpp='$CPP $CPPFLAGS'
-ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
-ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
-ac_compiler_gnu=$ac_cv_c_compiler_gnu
-
-
-     case $ax_cv_gcc_x86_cpuid_0 in
-       *:756e6547:*:*) # Intel
-          case $ax_cv_gcc_x86_cpuid_1 in
-	    *5[48]?:*:*:*) ax_gcc_arch="pentium-mmx pentium" ;;
-	    *5??:*:*:*) ax_gcc_arch=pentium ;;
-	    *0?6[3456]?:*:*:*) ax_gcc_arch="pentium2 pentiumpro" ;;
-	    *0?6a?:*[01]:*:*) ax_gcc_arch="pentium2 pentiumpro" ;;
-	    *0?6a?:*[234]:*:*) ax_gcc_arch="pentium3 pentiumpro" ;;
-	    *0?6[9de]?:*:*:*) ax_gcc_arch="pentium-m pentium3 pentiumpro" ;;
-	    *0?6[78b]?:*:*:*) ax_gcc_arch="pentium3 pentiumpro" ;;
-	    *0?6f?:*:*:*|*1?66?:*:*:*) ax_gcc_arch="core2 pentium-m pentium3 pentiumpro" ;;
-	    *1?6[7d]?:*:*:*) ax_gcc_arch="penryn core2 pentium-m pentium3 pentiumpro" ;;
-	    *1?6[aef]?:*:*:*|*2?6[5cef]?:*:*:*) ax_gcc_arch="corei7 core2 pentium-m pentium3 pentiumpro" ;;
-	    *1?6c?:*:*:*|*[23]?66?:*:*:*) ax_gcc_arch="atom core2 pentium-m pentium3 pentiumpro" ;;
-	    *2?6[ad]?:*:*:*) ax_gcc_arch="corei7-avx corei7 core2 pentium-m pentium3 pentiumpro" ;;
-	    *0?6??:*:*:*) ax_gcc_arch=pentiumpro ;;
-	    *6??:*:*:*) ax_gcc_arch="core2 pentiumpro" ;;
-	    ?000?f3[347]:*:*:*|?000?f41347:*:*:*|?000?f6?:*:*:*)
-		case $host_cpu in
-	          x86_64*) ax_gcc_arch="nocona pentium4 pentiumpro" ;;
-	          *) ax_gcc_arch="prescott pentium4 pentiumpro" ;;
-	        esac ;;
-	    ?000?f??:*:*:*) ax_gcc_arch="pentium4 pentiumpro";;
-          esac ;;
-       *:68747541:*:*) # AMD
-          case $ax_cv_gcc_x86_cpuid_1 in
-	    *5[67]?:*:*:*) ax_gcc_arch=k6 ;;
-	    *5[8d]?:*:*:*) ax_gcc_arch="k6-2 k6" ;;
-	    *5[9]?:*:*:*) ax_gcc_arch="k6-3 k6" ;;
-	    *60?:*:*:*) ax_gcc_arch=k7 ;;
-	    *6[12]?:*:*:*) ax_gcc_arch="athlon k7" ;;
-	    *6[34]?:*:*:*) ax_gcc_arch="athlon-tbird k7" ;;
-	    *67?:*:*:*) ax_gcc_arch="athlon-4 athlon k7" ;;
-	    *6[68a]?:*:*:*)
-
-ac_ext=c
-ac_cpp='$CPP $CPPFLAGS'
-ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
-ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
-ac_compiler_gnu=$ac_cv_c_compiler_gnu
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for x86 cpuid 0x80000006 output" >&5
-$as_echo_n "checking for x86 cpuid 0x80000006 output... " >&6; }
-if ${ax_cv_gcc_x86_cpuid_0x80000006+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  if test "$cross_compiling" = yes; then :
-  ax_cv_gcc_x86_cpuid_0x80000006=unknown
-else
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-#include <stdio.h>
-int
-main ()
-{
-
-     int op = 0x80000006, eax, ebx, ecx, edx;
-     FILE *f;
-      __asm__("cpuid"
-        : "=a" (eax), "=b" (ebx), "=c" (ecx), "=d" (edx)
-        : "a" (op));
-     f = fopen("conftest_cpuid", "w"); if (!f) return 1;
-     fprintf(f, "%x:%x:%x:%x\n", eax, ebx, ecx, edx);
-     fclose(f);
-     return 0;
-
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_run "$LINENO"; then :
-  ax_cv_gcc_x86_cpuid_0x80000006=`cat conftest_cpuid`; rm -f conftest_cpuid
-else
-  ax_cv_gcc_x86_cpuid_0x80000006=unknown; rm -f conftest_cpuid
-fi
-rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
-  conftest.$ac_objext conftest.beam conftest.$ac_ext
-fi
-
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ax_cv_gcc_x86_cpuid_0x80000006" >&5
-$as_echo "$ax_cv_gcc_x86_cpuid_0x80000006" >&6; }
-ac_ext=c
-ac_cpp='$CPP $CPPFLAGS'
-ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
-ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
-ac_compiler_gnu=$ac_cv_c_compiler_gnu
-
- # L2 cache size
-	       case $ax_cv_gcc_x86_cpuid_0x80000006 in
-                 *:*:*[1-9a-f]??????:*) # (L2 = ecx >> 16) >= 256
-			ax_gcc_arch="athlon-xp athlon-4 athlon k7" ;;
-                 *) ax_gcc_arch="athlon-4 athlon k7" ;;
-	       esac ;;
-	    ?00??f[4cef8b]?:*:*:*) ax_gcc_arch="athlon64 k8" ;;
-	    ?00??f5?:*:*:*) ax_gcc_arch="opteron k8" ;;
-	    ?00??f7?:*:*:*) ax_gcc_arch="athlon-fx opteron k8" ;;
-	    ?00??f??:*:*:*) ax_gcc_arch="k8" ;;
-	    ?05??f??:*:*:*) ax_gcc_arch="btver1 amdfam10 k8" ;;
-	    ?06??f??:*:*:*) ax_gcc_arch="bdver1 amdfam10 k8" ;;
-	    *f??:*:*:*) ax_gcc_arch="amdfam10 k8" ;;
-          esac ;;
-	*:746e6543:*:*) # IDT
-	   case $ax_cv_gcc_x86_cpuid_1 in
-	     *54?:*:*:*) ax_gcc_arch=winchip-c6 ;;
-	     *58?:*:*:*) ax_gcc_arch=winchip2 ;;
-	     *6[78]?:*:*:*) ax_gcc_arch=c3 ;;
-	     *69?:*:*:*) ax_gcc_arch="c3-2 c3" ;;
-	   esac ;;
-     esac
-     if test x"$ax_gcc_arch" = x; then # fallback
-	case $host_cpu in
-	  i586*) ax_gcc_arch=pentium ;;
-	  i686*) ax_gcc_arch=pentiumpro ;;
-        esac
-     fi
-     ;;
-
-  sparc*)
-     # Extract the first word of "prtdiag", so it can be a program name with args.
-set dummy prtdiag; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_path_PRTDIAG+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $PRTDIAG in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_PRTDIAG="$PRTDIAG" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-as_dummy="$PATH:/usr/platform/`uname -i`/sbin/:/usr/platform/`uname -m`/sbin/"
-for as_dir in $as_dummy
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
-    ac_cv_path_PRTDIAG="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  test -z "$ac_cv_path_PRTDIAG" && ac_cv_path_PRTDIAG="prtdiag"
-  ;;
-esac
-fi
-PRTDIAG=$ac_cv_path_PRTDIAG
-if test -n "$PRTDIAG"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PRTDIAG" >&5
-$as_echo "$PRTDIAG" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-     cputype=`(((grep cpu /proc/cpuinfo | cut -d: -f2) ; ($PRTDIAG -v |grep -i sparc) ; grep -i cpu /var/run/dmesg.boot ) | head -n 1) 2> /dev/null`
-     cputype=`echo "$cputype" | tr -d ' -' |tr $as_cr_LETTERS $as_cr_letters`
-     case $cputype in
-         *ultrasparciv*) ax_gcc_arch="ultrasparc4 ultrasparc3 ultrasparc v9" ;;
-         *ultrasparciii*) ax_gcc_arch="ultrasparc3 ultrasparc v9" ;;
-         *ultrasparc*) ax_gcc_arch="ultrasparc v9" ;;
-         *supersparc*|*tms390z5[05]*) ax_gcc_arch="supersparc v8" ;;
-         *hypersparc*|*rt62[056]*) ax_gcc_arch="hypersparc v8" ;;
-         *cypress*) ax_gcc_arch=cypress ;;
-     esac ;;
-
-  alphaev5) ax_gcc_arch=ev5 ;;
-  alphaev56) ax_gcc_arch=ev56 ;;
-  alphapca56) ax_gcc_arch="pca56 ev56" ;;
-  alphapca57) ax_gcc_arch="pca57 pca56 ev56" ;;
-  alphaev6) ax_gcc_arch=ev6 ;;
-  alphaev67) ax_gcc_arch=ev67 ;;
-  alphaev68) ax_gcc_arch="ev68 ev67" ;;
-  alphaev69) ax_gcc_arch="ev69 ev68 ev67" ;;
-  alphaev7) ax_gcc_arch="ev7 ev69 ev68 ev67" ;;
-  alphaev79) ax_gcc_arch="ev79 ev7 ev69 ev68 ev67" ;;
-
-  powerpc*)
-     cputype=`((grep cpu /proc/cpuinfo | head -n 1 | cut -d: -f2 | cut -d, -f1 | sed 's/ //g') ; /usr/bin/machine ; /bin/machine; grep CPU /var/run/dmesg.boot | head -n 1 | cut -d" " -f2) 2> /dev/null`
-     cputype=`echo $cputype | sed -e 's/ppc//g;s/ *//g'`
-     case $cputype in
-       *750*) ax_gcc_arch="750 G3" ;;
-       *740[0-9]*) ax_gcc_arch="$cputype 7400 G4" ;;
-       *74[4-5][0-9]*) ax_gcc_arch="$cputype 7450 G4" ;;
-       *74[0-9][0-9]*) ax_gcc_arch="$cputype G4" ;;
-       *970*) ax_gcc_arch="970 G5 power4";;
-       *POWER4*|*power4*|*gq*) ax_gcc_arch="power4 970";;
-       *POWER5*|*power5*|*gr*|*gs*) ax_gcc_arch="power5 power4 970";;
-       603ev|8240) ax_gcc_arch="$cputype 603e 603";;
-       *) ax_gcc_arch=$cputype ;;
-     esac
-     ax_gcc_arch="$ax_gcc_arch powerpc"
-     ;;
-esac
-fi # not cross-compiling
-fi # guess arch
-
-if test "x$ax_gcc_arch" != x -a "x$ax_gcc_arch" != xno; then
-for arch in $ax_gcc_arch; do
-  if test "xNO" = xyes; then # if we require portable code
-    flags="-mtune=$arch"
-    # -mcpu=$arch and m$arch generate nonportable code on every arch except
-    # x86.  And some other arches (e.g. Alpha) don't accept -mtune.  Grrr.
-    case $host_cpu in i*86|x86_64*) flags="$flags -mcpu=$arch -m$arch";; esac
-  else
-    flags="-march=$arch -mcpu=$arch -m$arch"
-  fi
-  for flag in $flags; do
-    as_CACHEVAR=`$as_echo "ax_cv_check_cflags__$flag" | $as_tr_sh`
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether C compiler accepts $flag" >&5
-$as_echo_n "checking whether C compiler accepts $flag... " >&6; }
-if eval \${$as_CACHEVAR+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-
-  ax_check_save_flags=$CFLAGS
-  CFLAGS="$CFLAGS  $flag"
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-int
-main ()
-{
-
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_compile "$LINENO"; then :
-  eval "$as_CACHEVAR=yes"
-else
-  eval "$as_CACHEVAR=no"
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-  CFLAGS=$ax_check_save_flags
-fi
-eval ac_res=\$$as_CACHEVAR
-	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
-$as_echo "$ac_res" >&6; }
-if test x"`eval 'as_val=${'$as_CACHEVAR'};$as_echo "$as_val"'`" = xyes; then :
-  ax_cv_gcc_archflag=$flag; break
-else
-  :
-fi
-
-  done
-  test "x$ax_cv_gcc_archflag" = xunknown || break
-done
-fi
-
-fi # $GCC=yes
-
-fi
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for gcc architecture flag" >&5
-$as_echo_n "checking for gcc architecture flag... " >&6; }
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ax_cv_gcc_archflag" >&5
-$as_echo "$ax_cv_gcc_archflag" >&6; }
-if test "x$ax_cv_gcc_archflag" = xunknown; then
-  :
-else
-  $CFLAGS
-fi
-
-CFLAGS="${CFLAGS=}"
-
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for OpenMP flag of C compiler" >&5
-$as_echo_n "checking for OpenMP flag of C compiler... " >&6; }
-if ${ax_cv_c_openmp+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  saveCFLAGS=$CFLAGS
-ax_cv_c_openmp=unknown
-# Flags to try:  -fopenmp (gcc), -openmp (icc), -mp (SGI & PGI),
-#                -xopenmp (Sun), -omp (Tru64), -qsmp=omp (AIX), none
-ax_openmp_flags="-fopenmp -openmp -mp -xopenmp -omp -qsmp=omp none"
-if test "x$OPENMP_CFLAGS" != x; then
-  ax_openmp_flags="$OPENMP_CFLAGS $ax_openmp_flags"
-fi
-for ax_openmp_flag in $ax_openmp_flags; do
-  case $ax_openmp_flag in
-    none) CFLAGS=$saveC ;;
-    *) CFLAGS="$saveCFLAGS $ax_openmp_flag" ;;
-  esac
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-/* Override any GCC internal prototype to avoid an error.
-   Use char because int might match the return type of a GCC
-   builtin and then its argument prototype would still apply.  */
-#ifdef __cplusplus
-extern "C"
+#ifndef _OPENMP
+ choke me
 #endif
-char omp_set_num_threads ();
-int
-main ()
-{
-return omp_set_num_threads ();
-  ;
-  return 0;
-}
+#include <omp.h>
+int main () { return omp_get_num_threads (); }
+
 _ACEOF
 if ac_fn_c_try_link "$LINENO"; then :
-  ax_cv_c_openmp=$ax_openmp_flag; break
+  ac_cv_prog_c_openmp='none needed'
+else
+  ac_cv_prog_c_openmp='unsupported'
+	  	  	  	  	  	  	  	  	  	  	  	  	  for ac_option in -fopenmp -xopenmp -openmp -mp -omp -qsmp=omp; do
+	    ac_save_CFLAGS=$CFLAGS
+	    CFLAGS="$CFLAGS $ac_option"
+	    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+#ifndef _OPENMP
+ choke me
+#endif
+#include <omp.h>
+int main () { return omp_get_num_threads (); }
+
+_ACEOF
+if ac_fn_c_try_link "$LINENO"; then :
+  ac_cv_prog_c_openmp=$ac_option
 fi
 rm -f core conftest.err conftest.$ac_objext \
     conftest$ac_exeext conftest.$ac_ext
-done
-CFLAGS=$saveCFLAGS
-
+	    CFLAGS=$ac_save_CFLAGS
+	    if test "$ac_cv_prog_c_openmp" != unsupported; then
+	      break
+	    fi
+	  done
 fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ax_cv_c_openmp" >&5
-$as_echo "$ax_cv_c_openmp" >&6; }
-if test "x$ax_cv_c_openmp" = "xunknown"; then
-  have_openmp=no
-else
-  if test "x$ax_cv_c_openmp" != "xnone"; then
-    OPENMP_CFLAGS=$ax_cv_c_openmp
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_prog_c_openmp" >&5
+$as_echo "$ac_cv_prog_c_openmp" >&6; }
+    case $ac_cv_prog_c_openmp in #(
+      "none needed" | unsupported)
+	;; #(
+      *)
+	OPENMP_CFLAGS=$ac_cv_prog_c_openmp ;;
+    esac
   fi
-  have_openmp=yes
-fi
-
-
-
-
 
 
 
@@ -5490,7 +5074,43 @@ test "x$prefix" = xNONE && prefix=$ac_default_prefix
 # Let make expand exec_prefix.
 test "x$exec_prefix" = xNONE && exec_prefix='${prefix}'
 
-DEFS=-DHAVE_CONFIG_H
+# Transform confdefs.h into DEFS.
+# Protect against shell expansion while executing Makefile rules.
+# Protect against Makefile macro expansion.
+#
+# If the first sed substitution is executed (which looks for macros that
+# take arguments), then branch to the quote section.  Otherwise,
+# look for a macro that doesn't take arguments.
+ac_script='
+:mline
+/\\$/{
+ N
+ s,\\\n,,
+ b mline
+}
+t clear
+:clear
+s/^[	 ]*#[	 ]*define[	 ][	 ]*\([^	 (][^	 (]*([^)]*)\)[	 ]*\(.*\)/-D\1=\2/g
+t quote
+s/^[	 ]*#[	 ]*define[	 ][	 ]*\([^	 ][^	 ]*\)[	 ]*\(.*\)/-D\1=\2/g
+t quote
+b any
+:quote
+s/[	 `~#$^&*(){}\\|;'\''"<>?]/\\&/g
+s/\[/\\&/g
+s/\]/\\&/g
+s/\$/$$/g
+H
+:any
+${
+	g
+	s/^\n//
+	s/\n/ /g
+	p
+}
+'
+DEFS=`sed -n "$ac_script" confdefs.h`
+
 
 ac_libobjs=
 ac_ltlibobjs=
@@ -5956,15 +5576,11 @@ case $ac_config_files in *"
 "*) set x $ac_config_files; shift; ac_config_files=$*;;
 esac
 
-case $ac_config_headers in *"
-"*) set x $ac_config_headers; shift; ac_config_headers=$*;;
-esac
 
 
 cat >>$CONFIG_STATUS <<_ACEOF || ac_write_fail=1
 # Files that config.status was made for.
 config_files="$ac_config_files"
-config_headers="$ac_config_headers"
 config_commands="$ac_config_commands"
 
 _ACEOF
@@ -5986,14 +5602,9 @@ Usage: $0 [OPTION]... [TAG]...
       --recheck    update $as_me by reconfiguring in the same conditions
       --file=FILE[:TEMPLATE]
                    instantiate the configuration file FILE
-      --header=FILE[:TEMPLATE]
-                   instantiate the configuration header FILE
 
 Configuration files:
 $config_files
-
-Configuration headers:
-$config_headers
 
 Configuration commands:
 $config_commands
@@ -6061,18 +5672,7 @@ do
     esac
     as_fn_append CONFIG_FILES " '$ac_optarg'"
     ac_need_defaults=false;;
-  --header | --heade | --head | --hea )
-    $ac_shift
-    case $ac_optarg in
-    *\'*) ac_optarg=`$as_echo "$ac_optarg" | sed "s/'/'\\\\\\\\''/g"` ;;
-    esac
-    as_fn_append CONFIG_HEADERS " '$ac_optarg'"
-    ac_need_defaults=false;;
-  --he | --h)
-    # Conflict between --help and --header
-    as_fn_error $? "ambiguous option: \`$1'
-Try \`$0 --help' for more information.";;
-  --help | --hel | -h )
+  --he | --h |  --help | --hel | -h )
     $as_echo "$ac_cs_usage"; exit ;;
   -q | -quiet | --quiet | --quie | --qui | --qu | --q \
   | -silent | --silent | --silen | --sile | --sil | --si | --s)
@@ -6133,7 +5733,6 @@ cat >>$CONFIG_STATUS <<\_ACEOF || ac_write_fail=1
 for ac_config_target in $ac_config_targets
 do
   case $ac_config_target in
-    "config.h") CONFIG_HEADERS="$CONFIG_HEADERS config.h" ;;
     "depfiles") CONFIG_COMMANDS="$CONFIG_COMMANDS depfiles" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
@@ -6149,7 +5748,6 @@ done
 # bizarre bug on SunOS 4.1.3.
 if $ac_need_defaults; then
   test "${CONFIG_FILES+set}" = set || CONFIG_FILES=$config_files
-  test "${CONFIG_HEADERS+set}" = set || CONFIG_HEADERS=$config_headers
   test "${CONFIG_COMMANDS+set}" = set || CONFIG_COMMANDS=$config_commands
 fi
 
@@ -6338,116 +5936,8 @@ fi
 cat >>$CONFIG_STATUS <<\_ACEOF || ac_write_fail=1
 fi # test -n "$CONFIG_FILES"
 
-# Set up the scripts for CONFIG_HEADERS section.
-# No need to generate them if there are no CONFIG_HEADERS.
-# This happens for instance with `./config.status Makefile'.
-if test -n "$CONFIG_HEADERS"; then
-cat >"$ac_tmp/defines.awk" <<\_ACAWK ||
-BEGIN {
-_ACEOF
 
-# Transform confdefs.h into an awk script `defines.awk', embedded as
-# here-document in config.status, that substitutes the proper values into
-# config.h.in to produce config.h.
-
-# Create a delimiter string that does not exist in confdefs.h, to ease
-# handling of long lines.
-ac_delim='%!_!# '
-for ac_last_try in false false :; do
-  ac_tt=`sed -n "/$ac_delim/p" confdefs.h`
-  if test -z "$ac_tt"; then
-    break
-  elif $ac_last_try; then
-    as_fn_error $? "could not make $CONFIG_HEADERS" "$LINENO" 5
-  else
-    ac_delim="$ac_delim!$ac_delim _$ac_delim!! "
-  fi
-done
-
-# For the awk script, D is an array of macro values keyed by name,
-# likewise P contains macro parameters if any.  Preserve backslash
-# newline sequences.
-
-ac_word_re=[_$as_cr_Letters][_$as_cr_alnum]*
-sed -n '
-s/.\{148\}/&'"$ac_delim"'/g
-t rset
-:rset
-s/^[	 ]*#[	 ]*define[	 ][	 ]*/ /
-t def
-d
-:def
-s/\\$//
-t bsnl
-s/["\\]/\\&/g
-s/^ \('"$ac_word_re"'\)\(([^()]*)\)[	 ]*\(.*\)/P["\1"]="\2"\
-D["\1"]=" \3"/p
-s/^ \('"$ac_word_re"'\)[	 ]*\(.*\)/D["\1"]=" \2"/p
-d
-:bsnl
-s/["\\]/\\&/g
-s/^ \('"$ac_word_re"'\)\(([^()]*)\)[	 ]*\(.*\)/P["\1"]="\2"\
-D["\1"]=" \3\\\\\\n"\\/p
-t cont
-s/^ \('"$ac_word_re"'\)[	 ]*\(.*\)/D["\1"]=" \2\\\\\\n"\\/p
-t cont
-d
-:cont
-n
-s/.\{148\}/&'"$ac_delim"'/g
-t clear
-:clear
-s/\\$//
-t bsnlc
-s/["\\]/\\&/g; s/^/"/; s/$/"/p
-d
-:bsnlc
-s/["\\]/\\&/g; s/^/"/; s/$/\\\\\\n"\\/p
-b cont
-' <confdefs.h | sed '
-s/'"$ac_delim"'/"\\\
-"/g' >>$CONFIG_STATUS || ac_write_fail=1
-
-cat >>$CONFIG_STATUS <<_ACEOF || ac_write_fail=1
-  for (key in D) D_is_set[key] = 1
-  FS = ""
-}
-/^[\t ]*#[\t ]*(define|undef)[\t ]+$ac_word_re([\t (]|\$)/ {
-  line = \$ 0
-  split(line, arg, " ")
-  if (arg[1] == "#") {
-    defundef = arg[2]
-    mac1 = arg[3]
-  } else {
-    defundef = substr(arg[1], 2)
-    mac1 = arg[2]
-  }
-  split(mac1, mac2, "(") #)
-  macro = mac2[1]
-  prefix = substr(line, 1, index(line, defundef) - 1)
-  if (D_is_set[macro]) {
-    # Preserve the white space surrounding the "#".
-    print prefix "define", macro P[macro] D[macro]
-    next
-  } else {
-    # Replace #undef with comments.  This is necessary, for example,
-    # in the case of _POSIX_SOURCE, which is predefined and required
-    # on some systems where configure will not decide to define it.
-    if (defundef == "undef") {
-      print "/*", prefix defundef, macro, "*/"
-      next
-    }
-  }
-}
-{ print }
-_ACAWK
-_ACEOF
-cat >>$CONFIG_STATUS <<\_ACEOF || ac_write_fail=1
-  as_fn_error $? "could not setup config headers machinery" "$LINENO" 5
-fi # test -n "$CONFIG_HEADERS"
-
-
-eval set X "  :F $CONFIG_FILES  :H $CONFIG_HEADERS    :C $CONFIG_COMMANDS"
+eval set X "  :F $CONFIG_FILES      :C $CONFIG_COMMANDS"
 shift
 for ac_tag
 do
@@ -6666,64 +6156,7 @@ which seems to be undefined.  Please make sure it is defined" >&2;}
   esac \
   || as_fn_error $? "could not create $ac_file" "$LINENO" 5
  ;;
-  :H)
-  #
-  # CONFIG_HEADER
-  #
-  if test x"$ac_file" != x-; then
-    {
-      $as_echo "/* $configure_input  */" \
-      && eval '$AWK -f "$ac_tmp/defines.awk"' "$ac_file_inputs"
-    } >"$ac_tmp/config.h" \
-      || as_fn_error $? "could not create $ac_file" "$LINENO" 5
-    if diff "$ac_file" "$ac_tmp/config.h" >/dev/null 2>&1; then
-      { $as_echo "$as_me:${as_lineno-$LINENO}: $ac_file is unchanged" >&5
-$as_echo "$as_me: $ac_file is unchanged" >&6;}
-    else
-      rm -f "$ac_file"
-      mv "$ac_tmp/config.h" "$ac_file" \
-	|| as_fn_error $? "could not create $ac_file" "$LINENO" 5
-    fi
-  else
-    $as_echo "/* $configure_input  */" \
-      && eval '$AWK -f "$ac_tmp/defines.awk"' "$ac_file_inputs" \
-      || as_fn_error $? "could not create -" "$LINENO" 5
-  fi
-# Compute "$ac_file"'s index in $config_headers.
-_am_arg="$ac_file"
-_am_stamp_count=1
-for _am_header in $config_headers :; do
-  case $_am_header in
-    $_am_arg | $_am_arg:* )
-      break ;;
-    * )
-      _am_stamp_count=`expr $_am_stamp_count + 1` ;;
-  esac
-done
-echo "timestamp for $_am_arg" >`$as_dirname -- "$_am_arg" ||
-$as_expr X"$_am_arg" : 'X\(.*[^/]\)//*[^/][^/]*/*$' \| \
-	 X"$_am_arg" : 'X\(//\)[^/]' \| \
-	 X"$_am_arg" : 'X\(//\)$' \| \
-	 X"$_am_arg" : 'X\(/\)' \| . 2>/dev/null ||
-$as_echo X"$_am_arg" |
-    sed '/^X\(.*[^/]\)\/\/*[^/][^/]*\/*$/{
-	    s//\1/
-	    q
-	  }
-	  /^X\(\/\/\)[^/].*/{
-	    s//\1/
-	    q
-	  }
-	  /^X\(\/\/\)$/{
-	    s//\1/
-	    q
-	  }
-	  /^X\(\/\).*/{
-	    s//\1/
-	    q
-	  }
-	  s/.*/./; q'`/stamp-h$_am_stamp_count
- ;;
+
 
   :C)  { $as_echo "$as_me:${as_lineno-$LINENO}: executing $ac_file commands" >&5
 $as_echo "$as_me: executing $ac_file commands" >&6;}

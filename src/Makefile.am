@@ -4,4 +4,4 @@ nec2c_SOURCES = nec2c_SOURCES = calculations.c  fields.c  \
 			      	misc.c  network.c  radiation.c  somnec.c
 noinst_HEADERS = nec2c.h
 nec2c_LDFLAGS = @LDFLAGS@
-
+AM_CFLAGS = -Wall -Wextra -Werror -mtune=native -march=native
