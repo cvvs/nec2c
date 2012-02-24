@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_PREREQ(2.62)
+AC_PREREQ(2.59)
 AC_INIT(nec2c, 0.9, mjtrangoni@gmail.com)
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_SRCDIR([src/main.c])
@@ -85,7 +85,7 @@ if test "$double_type" = none; then
 fi       
 
 dnl Check OpenMP support
-AC_OPENMP
+AX_OPENMP([have_openmp=yes], [have_openmp=no])
 
 AC_OUTPUT(Makefile src/Makefile)
 
